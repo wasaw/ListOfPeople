@@ -9,26 +9,26 @@ import SwiftUI
 struct HomeView: View {
     
 //    MARK: - Properties
-//    @State private var pinnedUser: UserViewModel?
+    @State private var pinnedUser: UserViewModel?
 //    @StateObject private var locationViewModel = LocationViewModel(locationService: LocationService())
     
 //    MARK: - Core
     var body: some View {
         NavigationView {
             VStack {
-//                if let pinnedUser = pinnedUser {
-//                    Button(action: {
-//                        self.pinnedUser = nil
-//                    }) {
-//                        PinnedView(user: pinnedUser)
-//                            .transition(.move(edge: .top))
-//                            .padding(.horizontal, 25)
-//                    }
-//                }
+                if let pinnedUser = pinnedUser {
+                    Button(action: {
+                        self.pinnedUser = nil
+                    }) {
+                        PinnedView(user: pinnedUser)
+                            .transition(.move(edge: .top))
+                            .padding(.horizontal, 25)
+                    }
+                }
                 
                 List(sampleUsers) { user in
                     Button(action: {
-//                        self.pinnedUser = user
+                        self.pinnedUser = user
                     }) {
                         UserRow(user: user)
                     }
