@@ -10,7 +10,7 @@ struct HomeView: View {
     
 //    MARK: - Properties
     @State private var pinnedUser: UserViewModel?
-//    @StateObject private var locationViewModel = LocationViewModel(locationService: LocationService())
+    @StateObject private var locationViewModel = LocationViewModel(locationService: LocationService())
     
 //    MARK: - Core
     var body: some View {
@@ -38,7 +38,7 @@ struct HomeView: View {
             .navigationTitle("Users")
         }
         .task {
-//            await locationViewModel.fetchLocation()
+            await locationViewModel.fetchLocation()
         }
     }
 }
