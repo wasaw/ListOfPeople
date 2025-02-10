@@ -12,14 +12,14 @@ struct PinnedView: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(user.avatar)
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                Text(user.name)
-                    .font(.subheadline)
-                    .foregroundColor(.white)
-                Text(String(user.distance))
-                    .foregroundStyle(.white)
+//                Text(user.avatar)
+//                    .font(.headline)
+//                    .foregroundStyle(.white)
+//                Text(user.name)
+//                    .font(.subheadline)
+//                    .foregroundColor(.white)
+//                Text(String(user.distance))
+//                    .foregroundStyle(.white)
             }
             Spacer()
         }

@@ -15,12 +15,12 @@ struct UserRow: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(user.avatar)
+                Text("\(user.latitude) \(user.longitude)")
                     .font(.headline)
                 Text(user.name)
                     .font(.subheadline)
                     .foregroundColor(.gray)
-                Text(String(user.distance))
+//                Text(String(user.distance))
             }
             Spacer()
         }
