@@ -9,6 +9,7 @@ import SwiftUI
 struct UserRow: View {
 //    MARK: - Properties
     let user: User
+    let distance: Double
     
 //    MARK: - Core
     var body: some View {
@@ -21,7 +22,7 @@ struct UserRow: View {
                 }
                 .frame(width: 55, height: 55)
                 VStack(alignment: .leading) {
-                    Text("\(user.latitude) \(user.longitude)")
+                    Text(String(distance))
                         .font(.headline)
                     Text(user.name)
                         .font(.subheadline)

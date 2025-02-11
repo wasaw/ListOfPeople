@@ -11,9 +11,7 @@ struct HomeView: View {
 //    MARK: - Properties
     @State private var pinnedUser: User?
     @StateObject private var userViewModel = UserViewModel()
-    @StateObject private var locationViewModel = LocationViewModel(locationService: LocationService())
-//    private let networkService = NetworkService()
-        
+            
 //    MARK: - Core
     var body: some View {
         NavigationView {
@@ -30,8 +28,10 @@ struct HomeView: View {
                 List(userViewModel.users) { user in
                     Button(action: {
                         self.pinnedUser = user
+                        userViewModel.setReferencePoint(pointedUser: user)
                     }) {
-                        UserRow(user: user)
+                        let distance = userViewModel.fetchDistance(user: user)
+                        UserRow(user: user, distance: distance)
                     }
 
                 }
@@ -39,19 +39,9 @@ struct HomeView: View {
             .navigationTitle("Users")
         }
         .task {
-//            await locationViewModel.fetchLocation()
-//            await fetchData()
             await userViewModel.loadUsers()
         }
     }
-    
-//    func fetchData() async {
-//        do {
-//            let users: [User] = try await networkService.fetchUserData(from: "https://listofpeople.free.beeceptor.com/list")
-//        } catch {
-//            print("DEBUG: \(error.localizedDescription)")
-//        }
-//    }
 }
 
 #Preview {

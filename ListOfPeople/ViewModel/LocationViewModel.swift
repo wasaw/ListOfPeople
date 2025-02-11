@@ -12,8 +12,8 @@ import Combine
 @MainActor
 class LocationViewModel: ObservableObject {
 //    MARK: - Properties
+    @Published var location: CLLocationCoordinate2D?
     private let locationService: LocationServiceProtocol
-    private var location: CLLocationCoordinate2D?
     private var cancellables = Set<AnyCancellable>()
     
 //    MARK: Lifecycle
@@ -57,7 +57,17 @@ private extension LocationViewModel {
 
 extension LocationViewModel {
     func fetchLocation() async {
-        let status = locationService.checkAuthorizationStatus()
-        await handleAuthorizationStatus(status)
+////        let status = locationService.checkAuthorizationStatus()
+////        await handleAuthorizationStatus(status)
+//        let status = locationService.checkAuthorizationStatus()
+//        if status == .notDetermined {
+//            locationService.requestAuthorization()
+//        } else if status == .authorizedWhenInUse || status == .authorizedAlways {
+//            Task {
+////                await handleAuthorizationStatus(status)
+//            }
+//        } else {
+//            print("DEBUG: Доступ запрещен")
+//        }
     }
 }
