@@ -6,7 +6,8 @@
 
 import Foundation
 
-struct User: Decodable {
+struct User: Identifiable, Decodable {
+    let id = UUID()
     let avatar: String
     let name: String
     let latitude: Double

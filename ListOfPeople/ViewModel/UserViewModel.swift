@@ -6,12 +6,17 @@
 
 import SwiftUI
 
-struct UserViewModel: Identifiable, Decodable {
+@MainActor
+class UserViewModel: ObservableObject {
 //    MARK: - Properties
-    let id = UUID()
-//    let avatar: String
-    let name: String
-//    let distance: Double
-    let latitude: String
-    let longitude: String
+    @Published var users: [User] = []
+    private let networkService = NetworkService()
+    
+    func loadUsers() async {
+        do {
+            users = try await networkService.fetchUserData(from: "https://listofpeople.free.beeceptor.com/list")
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
