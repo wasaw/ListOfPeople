@@ -21,7 +21,7 @@ struct PinnedView: View {
                 }
                 .frame(width: 55, height: 55)
                 VStack(alignment: .leading) {
-                    Text("\(user.latitude) \(user.longitude)")
+                    Text("Выбранный пользователь")
                         .font(.headline)
                     Text(user.name)
                         .font(.subheadline)
@@ -29,8 +29,6 @@ struct PinnedView: View {
                 }
             }
         }
-        .border(.red, width: 1)
-        .background(.gray)
-        .padding(15)
+        .padding(10)
     }
 }

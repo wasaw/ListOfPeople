@@ -22,7 +22,7 @@ struct UserRow: View {
                 }
                 .frame(width: 55, height: 55)
                 VStack(alignment: .leading) {
-                    Text(String(distance))
+                    Text("\(distance, specifier: "%.2f")")
                         .font(.headline)
                     Text(user.name)
                         .font(.subheadline)

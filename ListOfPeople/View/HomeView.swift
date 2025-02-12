@@ -18,22 +18,29 @@ struct HomeView: View {
             VStack {
                 if let pinnedUser = pinnedUser {
                     Button(action: {
-                        self.pinnedUser = nil
+                        Task{
+                            await userViewModel.setGPSRefencePoint(pinnedUser: pinnedUser)
+                            self.pinnedUser = nil
+                        }
                     }) {
                         PinnedView(user: pinnedUser)
                             .transition(.move(edge: .top))
-                            .padding(.horizontal, 25)
                     }
+                    .border(.yellow, width: 1)
+                    .background(.orange)
+                    .cornerRadius(15)
                 }
                 List(userViewModel.users) { user in
                     Button(action: {
+                        if let pinnedUser = pinnedUser {
+                            userViewModel.addUser(pinnedUser)
+                        }
                         self.pinnedUser = user
-                        userViewModel.setReferencePoint(pointedUser: user)
+                        userViewModel.setReferencePoint(pinnedUser: user)
                     }) {
                         let distance = userViewModel.fetchDistance(user: user)
                         UserRow(user: user, distance: distance)
                     }
-
                 }
             }
             .navigationTitle("Users")
@@ -41,6 +48,12 @@ struct HomeView: View {
         .task {
             await userViewModel.loadUsers()
         }
+    }
+    
+//    MARK: - Helpers
+    
+    func setGPSLocation(pinnedUser: User) async {
+        await userViewModel.setGPSRefencePoint(pinnedUser: pinnedUser)
     }
 }
 
