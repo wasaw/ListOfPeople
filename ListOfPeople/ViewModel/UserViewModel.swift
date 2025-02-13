@@ -13,6 +13,7 @@ class UserViewModel: ObservableObject {
     @Published var users: [User] = []
     private var referencePoint: CLLocation = CLLocation(latitude: 0, longitude: 0)
     private let networkService = NetworkService()
+    private let mockService = MockService()
     private let locationService = LocationService()
     private var timer: Timer?
 }
@@ -22,10 +23,8 @@ class UserViewModel: ObservableObject {
 extension UserViewModel {
     func loadUsers() async {
         do {
+            users = try await mockService.fetchUserData(from: "https://listofpeople.free.beeceptor.com/list")
 //            users = try await networkService.fetchUserData(from: "https://listofpeople.free.beeceptor.com/list")
-            users = [User(avatar: "https://avatar.iran.liara.run/public", name: "Wasaw", latitude: 30.42, longitude: 31.28),
-                     User(avatar: "https://avatar.iran.liara.run/public", name: "Saws", latitude: 21.17, longitude: 29.04),
-                     User(avatar: "https://avatar.iran.liara.run/public", name: "Dsasda", latitude: 21.00, longitude: 49.11)]
             referencePoint = try await locationService.fetchCurrentLocation()
             startUpdatingLocation()
         } catch {
@@ -64,7 +63,9 @@ extension UserViewModel {
 private extension UserViewModel {
     func startUpdatingLocation() {
         timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true, block: { _ in
-            self.updateUserLocation()
+            Task { @MainActor in
+                self.updateUserLocation()
+            }
         })
     }
     
