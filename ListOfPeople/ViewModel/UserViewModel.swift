@@ -14,6 +14,7 @@ class UserViewModel: ObservableObject {
     private var referencePoint: CLLocation = CLLocation(latitude: 0, longitude: 0)
     private let networkService = NetworkService()
     private let locationService = LocationService()
+    private var timer: Timer?
 }
 
 // MARK: - Public API
@@ -26,6 +27,7 @@ extension UserViewModel {
                      User(avatar: "https://avatar.iran.liara.run/public", name: "Saws", latitude: 21.17, longitude: 29.04),
                      User(avatar: "https://avatar.iran.liara.run/public", name: "Dsasda", latitude: 21.00, longitude: 49.11)]
             referencePoint = try await locationService.fetchCurrentLocation()
+            startUpdatingLocation()
         } catch {
             print(error.localizedDescription)
         }
@@ -54,5 +56,20 @@ extension UserViewModel {
     
     func addUser(_ user: User) {
         users.append(user)
+    }
+}
+
+// MARK: - Private API
+
+private extension UserViewModel {
+    func startUpdatingLocation() {
+        timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true, block: { _ in
+            self.updateUserLocation()
+        })
+    }
+    
+    func updateUserLocation() {
+        users.indices.forEach {users[$0].updateCoordanates()}
+        users = users
     }
 }
