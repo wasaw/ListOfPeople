@@ -6,16 +6,31 @@
 
 import SwiftUI
 import CoreLocation
+import Combine
 
 @MainActor
 class UserViewModel: ObservableObject {
 //    MARK: - Properties
     @Published var users: [User] = []
-    private var referencePoint: CLLocation = CLLocation(latitude: 0, longitude: 0)
+    @Published var referencePoint: CLLocation?
     private let networkService = NetworkService()
     private let mockService = MockService()
     private let locationService = LocationService()
     private var timer: Timer?
+    private var cancellables = Set<AnyCancellable>()
+    
+//    MARK: - Lifecycle
+    
+    init() {
+        locationService.authorizationStatus
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] status in
+                Task {
+                    await self?.handleAuthorizationStatus(status)
+                }
+            })
+            .store(in: &cancellables)
+    }
 }
 
 // MARK: - Public API
@@ -34,6 +49,7 @@ extension UserViewModel {
     
     func fetchDistance(user: User) -> CLLocationDistance {
         let location = CLLocation(latitude: user.latitude, longitude: user.longitude)
+        guard let referencePoint = referencePoint else { return location.distance(from: location) }
         return referencePoint.distance(from: location)
     }
     
@@ -73,4 +89,21 @@ private extension UserViewModel {
         users.indices.forEach {users[$0].updateCoordanates()}
         users = users
     }
+    
+    func handleAuthorizationStatus(_ status: CLAuthorizationStatus) async {
+         switch status {
+         case .notDetermined:
+             locationService.requestAuthorization()
+         case .authorizedWhenInUse, .authorizedAlways:
+             do {
+                 referencePoint = try await locationService.fetchCurrentLocation()
+             } catch {
+                 print("DEBUG: \(error.localizedDescription)")
+             }
+         case .denied, .restricted:
+             print("DEBUG: Доступ запрещен")
+         @unknown default:
+             print("DEBUG: Неизвестный статус")
+         }
+     }
 }

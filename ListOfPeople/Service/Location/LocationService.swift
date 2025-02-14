@@ -53,6 +53,9 @@ extension LocationService: LocationServiceProtocol {
     
     func fetchCurrentLocation() async throws -> CLLocation {
         return try await withCheckedThrowingContinuation { continuation in
+            if let previousContinuation = self.continuation {
+                previousContinuation.resume(throwing: LocationError.multipleRequests)
+            }
             self.continuation = continuation
             locationManager.requestLocation()
         }
@@ -66,7 +69,6 @@ private extension LocationService {
         switch locationManager.authorizationStatus {
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
-            print("DEBUG: requestWhenInUseAuthorization")
         case .denied , .restricted:
             print("DEBUG: Доступ пользователем запрешен")
         case .authorizedWhenInUse, .authorizedAlways:
